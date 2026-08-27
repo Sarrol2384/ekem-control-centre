@@ -14,7 +14,7 @@ function formatToday() {
 }
 
 export function Header({ onMenuClick }: HeaderProps) {
-  const { profile, user, signOut } = useAuth()
+  const { profile, user, isLocalDemo, signOut } = useAuth()
   const displayName = profile?.full_name ?? user?.email ?? 'Manager'
 
   return (
@@ -32,7 +32,10 @@ export function Header({ onMenuClick }: HeaderProps) {
           <p className="truncate text-sm font-semibold text-[var(--color-text)] sm:text-base">
             Manager Control Centre
           </p>
-          <p className="truncate text-xs text-[var(--color-muted)]">{formatToday()}</p>
+          <p className="truncate text-xs text-[var(--color-muted)]">
+            {formatToday()}
+            {isLocalDemo ? ' · Local demonstration mode' : ''}
+          </p>
         </div>
       </div>
 

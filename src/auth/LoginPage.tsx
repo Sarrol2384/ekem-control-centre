@@ -3,7 +3,7 @@ import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from './useAuth'
 
 export function LoginPage() {
-  const { session, loading, isConfigured, signIn } = useAuth()
+  const { session, loading, isConfigured, isLocalDemo, signIn, enterLocalDemo } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
   const [email, setEmail] = useState('')
@@ -15,7 +15,7 @@ export function LoginPage() {
   const from =
     locationState?.from && locationState.from !== '/login' ? locationState.from : '/'
 
-  if (!loading && session) {
+  if (!loading && (session || isLocalDemo)) {
     return <Navigate to={from} replace />
   }
 
@@ -31,6 +31,11 @@ export function LoginPage() {
       return
     }
 
+    navigate(from, { replace: true })
+  }
+
+  function handleLocalDemo() {
+    enterLocalDemo()
     navigate(from, { replace: true })
   }
 
@@ -53,7 +58,8 @@ export function LoginPage() {
             role="status"
           >
             Supabase credentials are not configured. Copy <code>.env.example</code> to{' '}
-            <code>.env.local</code> and add your project URL and anon key.
+            <code>.env.local</code> and add your project URL and anon key, or continue in local
+            demonstration mode.
           </div>
         )}
 
@@ -98,6 +104,16 @@ export function LoginPage() {
             {submitting ? 'Signing in…' : 'Sign in'}
           </button>
         </form>
+
+        {!isConfigured && (
+          <button
+            type="button"
+            onClick={handleLocalDemo}
+            className="mt-4 w-full border border-[var(--color-border)] px-4 py-2.5 text-sm font-medium text-[var(--color-text)] hover:bg-[var(--color-bg)]"
+          >
+            Continue in local demonstration mode
+          </button>
+        )}
       </div>
     </div>
   )

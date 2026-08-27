@@ -45,20 +45,63 @@ export type Database = {
           full_name: string
           position: string | null
           department: string | null
-          employment_status: string
+          employment_status: 'active' | 'inactive' | 'archived'
           start_date: string | null
           contact_number: string | null
           email: string | null
+          address: string | null
           profile_photo_url: string | null
           emergency_contact_name: string | null
+          emergency_contact_relationship: string | null
           emergency_contact_number: string | null
           notes: string | null
+          is_demo: boolean
           created_at: string
           updated_at: string
           archived_at: string | null
         }
-        Insert: Record<string, unknown>
-        Update: Record<string, unknown>
+        Insert: {
+          id?: string
+          employee_code: string
+          full_name: string
+          position?: string | null
+          department?: string | null
+          employment_status?: 'active' | 'inactive' | 'archived'
+          start_date?: string | null
+          contact_number?: string | null
+          email?: string | null
+          address?: string | null
+          profile_photo_url?: string | null
+          emergency_contact_name?: string | null
+          emergency_contact_relationship?: string | null
+          emergency_contact_number?: string | null
+          notes?: string | null
+          is_demo?: boolean
+          created_at?: string
+          updated_at?: string
+          archived_at?: string | null
+        }
+        Update: {
+          id?: string
+          employee_code?: string
+          full_name?: string
+          position?: string | null
+          department?: string | null
+          employment_status?: 'active' | 'inactive' | 'archived'
+          start_date?: string | null
+          contact_number?: string | null
+          email?: string | null
+          address?: string | null
+          profile_photo_url?: string | null
+          emergency_contact_name?: string | null
+          emergency_contact_relationship?: string | null
+          emergency_contact_number?: string | null
+          notes?: string | null
+          is_demo?: boolean
+          created_at?: string
+          updated_at?: string
+          archived_at?: string | null
+        }
         Relationships: []
       }
       employee_documents: {
@@ -184,8 +227,24 @@ export type Database = {
           metadata: Json | null
           created_at: string
         }
-        Insert: Record<string, unknown>
-        Update: Record<string, unknown>
+        Insert: {
+          id?: string
+          actor_id?: string | null
+          action: string
+          entity_type: string
+          entity_id?: string | null
+          metadata?: Json | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          actor_id?: string | null
+          action?: string
+          entity_type?: string
+          entity_id?: string | null
+          metadata?: Json | null
+          created_at?: string
+        }
         Relationships: []
       }
       demo_sales: {

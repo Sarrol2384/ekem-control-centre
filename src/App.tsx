@@ -13,6 +13,8 @@ import { SettingsPage } from './pages/SettingsPage'
 import { StaffPage } from './pages/StaffPage'
 import { TasksPage } from './pages/TasksPage'
 import { TrainingPage } from './pages/TrainingPage'
+import { EmployeeFormPage } from './staff/EmployeeFormPage'
+import { EmployeeProfilePage } from './staff/EmployeeProfilePage'
 
 export default function App() {
   return (
@@ -29,6 +31,9 @@ export default function App() {
           >
             <Route index element={<DashboardPage />} />
             <Route path="staff" element={<StaffPage />} />
+            <Route path="staff/new" element={<EmployeeFormPage mode="create" />} />
+            <Route path="staff/:employeeId" element={<EmployeeProfilePage />} />
+            <Route path="staff/:employeeId/edit" element={<EmployeeFormPage mode="edit" />} />
             <Route path="attendance" element={<AttendancePage />} />
             <Route path="leave" element={<LeavePage />} />
             <Route path="tasks" element={<TasksPage />} />

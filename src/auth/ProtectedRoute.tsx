@@ -3,7 +3,7 @@ import { Navigate, useLocation } from 'react-router-dom'
 import { useAuth } from './useAuth'
 
 export function ProtectedRoute({ children }: { children: ReactNode }) {
-  const { session, loading } = useAuth()
+  const { session, isLocalDemo, loading } = useAuth()
   const location = useLocation()
 
   if (loading) {
@@ -14,7 +14,7 @@ export function ProtectedRoute({ children }: { children: ReactNode }) {
     )
   }
 
-  if (!session) {
+  if (!session && !isLocalDemo) {
     return <Navigate to="/login" replace state={{ from: location.pathname }} />
   }
 

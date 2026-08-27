@@ -1,7 +1,13 @@
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
 import type { Session } from '@supabase/supabase-js'
 import { getSupabaseClient, isSupabaseConfigured } from '../lib/supabase'
-import { AuthContext, type AuthContextValue, type Profile } from './AuthContext'
+import {
+  AuthContext,
+  LOCAL_DEMO_PROFILE,
+  LOCAL_DEMO_STORAGE_KEY,
+  type AuthContextValue,
+  type Profile,
+} from './AuthContext'
 
 async function fetchProfile(userId: string): Promise<Profile | null> {
   const supabase = getSupabaseClient()
@@ -20,20 +26,32 @@ async function fetchProfile(userId: string): Promise<Profile | null> {
   return data as Profile
 }
 
+function readLocalDemoFlag(): boolean {
+  if (isSupabaseConfigured) return false
+  return localStorage.getItem(LOCAL_DEMO_STORAGE_KEY) === '1'
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null)
-  const [profile, setProfile] = useState<Profile | null>(null)
+  const [isLocalDemo, setIsLocalDemo] = useState(() => readLocalDemoFlag())
+  const [profile, setProfile] = useState<Profile | null>(() =>
+    readLocalDemoFlag() ? LOCAL_DEMO_PROFILE : null,
+  )
   const [loading, setLoading] = useState(() => isSupabaseConfigured)
 
   const refreshProfile = useCallback(async () => {
     const currentUserId = session?.user?.id
     if (!currentUserId) {
+      if (isLocalDemo) {
+        setProfile(LOCAL_DEMO_PROFILE)
+        return
+      }
       setProfile(null)
       return
     }
     const nextProfile = await fetchProfile(currentUserId)
     setProfile(nextProfile)
-  }, [session?.user?.id])
+  }, [session?.user?.id, isLocalDemo])
 
   useEffect(() => {
     const supabase = getSupabaseClient()
@@ -57,6 +75,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+      setIsLocalDemo(false)
+      localStorage.removeItem(LOCAL_DEMO_STORAGE_KEY)
       setSession(nextSession)
       if (!nextSession?.user) {
         setProfile(null)
@@ -81,7 +101,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!supabase) {
       return {
         error:
-          'Supabase is not configured. Copy .env.example to .env.local and add project credentials.',
+          'Supabase is not configured. Copy .env.example to .env.local and add project credentials, or use local demonstration mode.',
       }
     }
 
@@ -89,11 +109,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { error: error?.message ?? null }
   }, [])
 
+  const enterLocalDemo = useCallback(() => {
+    if (isSupabaseConfigured) return
+    localStorage.setItem(LOCAL_DEMO_STORAGE_KEY, '1')
+    setIsLocalDemo(true)
+    setProfile(LOCAL_DEMO_PROFILE)
+    setSession(null)
+    setLoading(false)
+  }, [])
+
   const signOut = useCallback(async () => {
+    localStorage.removeItem(LOCAL_DEMO_STORAGE_KEY)
+    setIsLocalDemo(false)
+    setProfile(null)
+
     const supabase = getSupabaseClient()
     if (!supabase) {
       setSession(null)
-      setProfile(null)
       return
     }
     await supabase.auth.signOut()
@@ -103,14 +135,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     () => ({
       session,
       user: session?.user ?? null,
-      profile,
+      profile: isLocalDemo ? LOCAL_DEMO_PROFILE : profile,
       loading,
       isConfigured: isSupabaseConfigured,
+      isLocalDemo,
       signIn,
+      enterLocalDemo,
       signOut,
       refreshProfile,
     }),
-    [session, profile, loading, signIn, signOut, refreshProfile],
+    [
+      session,
+      profile,
+      loading,
+      isLocalDemo,
+      signIn,
+      enterLocalDemo,
+      signOut,
+      refreshProfile,
+    ],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
