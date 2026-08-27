@@ -125,14 +125,41 @@ export type Database = {
           id: string
           employee_id: string
           attendance_date: string
-          status: string
+          status: 'present' | 'absent' | 'late' | 'on_leave'
+          arrival_time: string | null
+          departure_time: string | null
           notes: string | null
           recorded_by: string | null
+          is_demo: boolean
           created_at: string
           updated_at: string
         }
-        Insert: Record<string, unknown>
-        Update: Record<string, unknown>
+        Insert: {
+          id?: string
+          employee_id: string
+          attendance_date: string
+          status: 'present' | 'absent' | 'late' | 'on_leave'
+          arrival_time?: string | null
+          departure_time?: string | null
+          notes?: string | null
+          recorded_by?: string | null
+          is_demo?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          employee_id?: string
+          attendance_date?: string
+          status?: 'present' | 'absent' | 'late' | 'on_leave'
+          arrival_time?: string | null
+          departure_time?: string | null
+          notes?: string | null
+          recorded_by?: string | null
+          is_demo?: boolean
+          created_at?: string
+          updated_at?: string
+        }
         Relationships: []
       }
       leave_requests: {
