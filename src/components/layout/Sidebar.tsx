@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom'
+import { EkemBrand } from '../EkemBrand'
 import { NAV_ITEMS } from './navItems'
 
 type SidebarProps = {
@@ -14,11 +15,8 @@ export function Sidebar({ open, onNavigate }: SidebarProps) {
       }`}
       aria-label="Main navigation"
     >
-      <div className="flex h-[var(--header-height)] items-center border-b border-[var(--color-border)] px-5">
-        <div>
-          <p className="text-sm font-semibold text-[var(--color-primary)]">Ekem Pharmacy</p>
-          <p className="text-xs text-[var(--color-muted)]">Manager Control Centre</p>
-        </div>
+      <div className="border-b border-[var(--color-border)] px-4 py-3">
+        <EkemBrand size="sm" showTagline showSubtitle />
       </div>
 
       <nav className="flex flex-col gap-0.5 p-3">

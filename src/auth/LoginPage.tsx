@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
+import { EkemBrand } from '../components/EkemBrand'
 import { useAuth } from './useAuth'
 
 export function LoginPage() {
@@ -42,13 +43,8 @@ export function LoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-[var(--color-bg)] px-4">
       <div className="w-full max-w-md border border-[var(--color-border)] bg-[var(--color-surface)] p-8 shadow-sm">
-        <p className="text-sm font-semibold tracking-wide text-[var(--color-primary)] uppercase">
-          Ekem Pharmacy
-        </p>
-        <h1 className="mt-2 text-2xl font-semibold text-[var(--color-text)]">
-          Manager Control Centre
-        </h1>
-        <p className="mt-2 text-sm text-[var(--color-muted)]">
+        <EkemBrand layout="stacked" size="lg" showTagline showSubtitle />
+        <p className="mt-4 text-sm text-[var(--color-muted)]">
           Sign in with your manager account to continue.
         </p>
 

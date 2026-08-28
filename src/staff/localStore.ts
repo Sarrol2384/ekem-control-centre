@@ -50,7 +50,7 @@ export function createSeedEmployees(): Employee[] {
       emergency_contact_name: 'Michelle Adams',
       emergency_contact_relationship: 'Sister',
       emergency_contact_number: '083 555 0203',
-      notes: 'Demonstration employee record for Manager Control Centre demos.',
+      notes: 'Demonstration employee — active, with approved sick leave demo covering today.',
       is_demo: true,
       created_at: createdAt,
       updated_at: createdAt,
