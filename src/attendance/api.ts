@@ -1,4 +1,5 @@
 import type { Json } from '../lib/database.types'
+import { listApprovedLeaveEmployeeIds } from '../leave/api'
 import { getSupabaseClient, isSupabaseConfigured } from '../lib/supabase'
 import { listEmployees } from '../staff/api'
 import type { Employee } from '../staff/types'
@@ -43,26 +44,6 @@ async function writeAuditLog(input: {
   if (error) {
     console.error('Failed to write audit log', error.message)
   }
-}
-
-async function listApprovedLeaveEmployeeIds(date: string): Promise<Set<string>> {
-  const supabase = getSupabaseClient()
-  if (!supabase) return new Set()
-
-  const { data, error } = await supabase
-    .from('leave_requests')
-    .select('employee_id, start_date, end_date, status')
-    .eq('status', 'approved')
-    .lte('start_date', date)
-    .gte('end_date', date)
-
-  if (error) {
-    // Leave module not fully implemented; ignore query failures for attendance display.
-    console.warn('Unable to load approved leave for attendance context', error.message)
-    return new Set()
-  }
-
-  return new Set((data ?? []).map((row) => row.employee_id))
 }
 
 export function summarizeAttendance(
@@ -174,6 +155,16 @@ export async function saveAttendanceRecord(input: {
   actorId: string | null
   existingId?: string | null
 }): Promise<AttendanceRecord> {
+  const approvedLeaveIds = await listApprovedLeaveEmployeeIds(input.date)
+  if (
+    approvedLeaveIds.has(input.employeeId) &&
+    input.values.status !== 'on_leave'
+  ) {
+    throw new Error(
+      'This employee is on approved leave for this date. Present, Late, or Absent cannot override approved leave.',
+    )
+  }
+
   const payload = {
     employee_id: input.employeeId,
     attendance_date: input.date,

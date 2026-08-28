@@ -166,19 +166,48 @@ export type Database = {
         Row: {
           id: string
           employee_id: string
-          leave_type: string
-          status: string
+          leave_type: 'annual' | 'sick' | 'family_responsibility' | 'other'
+          status: 'pending' | 'approved' | 'rejected' | 'cancelled'
           start_date: string
           end_date: string
           days_count: number
           notes: string | null
           reviewed_by: string | null
           reviewed_at: string | null
+          is_demo: boolean
           created_at: string
           updated_at: string
         }
-        Insert: Record<string, unknown>
-        Update: Record<string, unknown>
+        Insert: {
+          id?: string
+          employee_id: string
+          leave_type: 'annual' | 'sick' | 'family_responsibility' | 'other'
+          status?: 'pending' | 'approved' | 'rejected' | 'cancelled'
+          start_date: string
+          end_date: string
+          days_count: number
+          notes?: string | null
+          reviewed_by?: string | null
+          reviewed_at?: string | null
+          is_demo?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          employee_id?: string
+          leave_type?: 'annual' | 'sick' | 'family_responsibility' | 'other'
+          status?: 'pending' | 'approved' | 'rejected' | 'cancelled'
+          start_date?: string
+          end_date?: string
+          days_count?: number
+          notes?: string | null
+          reviewed_by?: string | null
+          reviewed_at?: string | null
+          is_demo?: boolean
+          created_at?: string
+          updated_at?: string
+        }
         Relationships: []
       }
       training_records: {

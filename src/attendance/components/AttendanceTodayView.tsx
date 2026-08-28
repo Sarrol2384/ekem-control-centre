@@ -64,19 +64,26 @@ export function AttendanceTodayView() {
   }, [date])
 
   const summary = useMemo(
-    () => summarizeAttendance(rows.map((row) => ({ status: row.record?.status ?? null }))),
+    () =>
+      summarizeAttendance(
+        rows.map((row) => ({
+          status:
+            row.scheduledStatus === 'approved_leave'
+              ? 'on_leave'
+              : (row.record?.status ?? null),
+        })),
+      ),
     [rows],
   )
 
   const attention = useMemo(
     () =>
-      rows.filter(
-        (row) =>
-          !row.record ||
-          row.record.status === 'late' ||
-          row.record.status === 'absent' ||
-          row.scheduledStatus === 'approved_leave',
-      ),
+      rows.filter((row) => {
+        if (row.scheduledStatus === 'approved_leave') return false
+        return (
+          !row.record || row.record.status === 'late' || row.record.status === 'absent'
+        )
+      }),
     [rows],
   )
 
@@ -155,7 +162,7 @@ export function AttendanceTodayView() {
           <p className="font-medium">Needs attention</p>
           <p className="mt-1">
             {attention.length} employee{attention.length === 1 ? '' : 's'} still need a clear
-            attendance outcome (not recorded, late, absent, or on approved leave).
+            attendance outcome (not recorded, late, or absent).
           </p>
         </div>
       )}
@@ -199,6 +206,10 @@ export function AttendanceTodayView() {
             <tbody>
               {rows.map((row) => {
                 const busy = busyEmployeeId === row.employee.id
+                const onApprovedLeave = row.scheduledStatus === 'approved_leave'
+                const displayStatus = onApprovedLeave
+                  ? 'on_leave'
+                  : (row.record?.status ?? null)
                 return (
                   <tr
                     key={row.employee.id}
@@ -215,49 +226,62 @@ export function AttendanceTodayView() {
                     </td>
                     <td className="px-3 py-3">{row.employee.position ?? '—'}</td>
                     <td className="px-3 py-3">
-                      {row.scheduledStatus === 'approved_leave'
-                        ? 'Approved leave'
-                        : 'Scheduled'}
+                      {onApprovedLeave ? 'Approved leave' : 'Scheduled'}
                     </td>
                     <td className="px-3 py-3">
-                      <AttendanceStatusBadge status={row.record?.status} />
+                      <AttendanceStatusBadge status={displayStatus} />
+                      {onApprovedLeave && (
+                        <p className="mt-1 text-xs text-[var(--color-muted)]">
+                          From approved leave request
+                        </p>
+                      )}
                     </td>
                     <td className="px-3 py-3 whitespace-nowrap">
-                      {formatTimeDisplay(row.record?.arrival_time)}
+                      {onApprovedLeave ? '—' : formatTimeDisplay(row.record?.arrival_time)}
                     </td>
                     <td className="px-3 py-3 whitespace-nowrap">
-                      {formatTimeDisplay(row.record?.departure_time)}
+                      {onApprovedLeave ? '—' : formatTimeDisplay(row.record?.departure_time)}
                     </td>
                     <td className="px-3 py-3 max-w-[14rem]">
                       <span className="line-clamp-2 text-[var(--color-muted)]">
-                        {row.record?.notes?.trim() ? row.record.notes : '—'}
+                        {onApprovedLeave
+                          ? 'Covered by approved leave'
+                          : row.record?.notes?.trim()
+                            ? row.record.notes
+                            : '—'}
                       </span>
                     </td>
                     <td className="px-3 py-3">
-                      <div className="flex min-w-[12rem] flex-wrap gap-1">
-                        {QUICK_STATUSES.map((status) => (
+                      {onApprovedLeave ? (
+                        <p className="text-xs text-[var(--color-muted)]">
+                          Attendance overrides are blocked while on approved leave.
+                        </p>
+                      ) : (
+                        <div className="flex min-w-[12rem] flex-wrap gap-1">
+                          {QUICK_STATUSES.map((status) => (
+                            <button
+                              key={status}
+                              type="button"
+                              disabled={busy}
+                              onClick={() => void handleQuickMark(row, status)}
+                              className="border border-[var(--color-border)] px-2 py-1 text-xs capitalize hover:bg-[var(--color-bg)] disabled:opacity-60"
+                            >
+                              {status.replace('_', ' ')}
+                            </button>
+                          ))}
                           <button
-                            key={status}
                             type="button"
                             disabled={busy}
-                            onClick={() => void handleQuickMark(row, status)}
-                            className="border border-[var(--color-border)] px-2 py-1 text-xs capitalize hover:bg-[var(--color-bg)] disabled:opacity-60"
+                            onClick={() => {
+                              setEditorError(null)
+                              setEditorRow(row)
+                            }}
+                            className="border border-[var(--color-primary)] px-2 py-1 text-xs text-[var(--color-primary)] hover:bg-[var(--color-bg)] disabled:opacity-60"
                           >
-                            {status.replace('_', ' ')}
+                            {row.record ? 'Correct / edit' : 'Record details'}
                           </button>
-                        ))}
-                        <button
-                          type="button"
-                          disabled={busy}
-                          onClick={() => {
-                            setEditorError(null)
-                            setEditorRow(row)
-                          }}
-                          className="border border-[var(--color-primary)] px-2 py-1 text-xs text-[var(--color-primary)] hover:bg-[var(--color-bg)] disabled:opacity-60"
-                        >
-                          {row.record ? 'Correct / edit' : 'Record details'}
-                        </button>
-                      </div>
+                        </div>
+                      )}
                     </td>
                   </tr>
                 )
