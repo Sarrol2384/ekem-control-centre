@@ -219,13 +219,40 @@ export type Database = {
           training_date: string | null
           expiry_date: string | null
           certificate_reference: string | null
-          status: string
+          status: 'valid' | 'due' | 'expiring_soon' | 'expired'
           notes: string | null
+          is_demo: boolean
           created_at: string
           updated_at: string
         }
-        Insert: Record<string, unknown>
-        Update: Record<string, unknown>
+        Insert: {
+          id?: string
+          employee_id: string
+          training_name: string
+          provider?: string | null
+          training_date?: string | null
+          expiry_date?: string | null
+          certificate_reference?: string | null
+          status?: 'valid' | 'due' | 'expiring_soon' | 'expired'
+          notes?: string | null
+          is_demo?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          employee_id?: string
+          training_name?: string
+          provider?: string | null
+          training_date?: string | null
+          expiry_date?: string | null
+          certificate_reference?: string | null
+          status?: 'valid' | 'due' | 'expiring_soon' | 'expired'
+          notes?: string | null
+          is_demo?: boolean
+          created_at?: string
+          updated_at?: string
+        }
         Relationships: []
       }
       tasks: {
