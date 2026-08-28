@@ -236,14 +236,41 @@ export type Database = {
           assigned_employee_id: string | null
           created_by: string | null
           due_date: string | null
-          priority: string
-          status: string
+          priority: 'low' | 'medium' | 'high' | 'critical'
+          status: 'todo' | 'in_progress' | 'completed'
           completed_at: string | null
+          is_demo: boolean
           created_at: string
           updated_at: string
         }
-        Insert: Record<string, unknown>
-        Update: Record<string, unknown>
+        Insert: {
+          id?: string
+          title: string
+          description?: string | null
+          assigned_employee_id?: string | null
+          created_by?: string | null
+          due_date?: string | null
+          priority?: 'low' | 'medium' | 'high' | 'critical'
+          status?: 'todo' | 'in_progress' | 'completed'
+          completed_at?: string | null
+          is_demo?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          title?: string
+          description?: string | null
+          assigned_employee_id?: string | null
+          created_by?: string | null
+          due_date?: string | null
+          priority?: 'low' | 'medium' | 'high' | 'critical'
+          status?: 'todo' | 'in_progress' | 'completed'
+          completed_at?: string | null
+          is_demo?: boolean
+          created_at?: string
+          updated_at?: string
+        }
         Relationships: []
       }
       task_activity: {
@@ -255,8 +282,22 @@ export type Database = {
           details: string | null
           created_at: string
         }
-        Insert: Record<string, unknown>
-        Update: Record<string, unknown>
+        Insert: {
+          id?: string
+          task_id: string
+          actor_id?: string | null
+          action: string
+          details?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          task_id?: string
+          actor_id?: string | null
+          action?: string
+          details?: string | null
+          created_at?: string
+        }
         Relationships: []
       }
       notifications: {
