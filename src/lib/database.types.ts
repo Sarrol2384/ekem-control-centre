@@ -109,15 +109,65 @@ export type Database = {
           id: string
           employee_id: string
           title: string
-          document_type: string
+          document_type:
+            | 'employment_contract'
+            | 'identification'
+            | 'qualification'
+            | 'professional_registration'
+            | 'training_certificate'
+            | 'other'
+          document_date: string | null
+          expiry_date: string | null
           storage_path: string | null
           reference_code: string | null
           notes: string | null
           uploaded_by: string | null
+          is_demo: boolean
           created_at: string
+          updated_at: string
         }
-        Insert: Record<string, unknown>
-        Update: Record<string, unknown>
+        Insert: {
+          id?: string
+          employee_id: string
+          title: string
+          document_type:
+            | 'employment_contract'
+            | 'identification'
+            | 'qualification'
+            | 'professional_registration'
+            | 'training_certificate'
+            | 'other'
+          document_date?: string | null
+          expiry_date?: string | null
+          storage_path?: string | null
+          reference_code?: string | null
+          notes?: string | null
+          uploaded_by?: string | null
+          is_demo?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          employee_id?: string
+          title?: string
+          document_type?:
+            | 'employment_contract'
+            | 'identification'
+            | 'qualification'
+            | 'professional_registration'
+            | 'training_certificate'
+            | 'other'
+          document_date?: string | null
+          expiry_date?: string | null
+          storage_path?: string | null
+          reference_code?: string | null
+          notes?: string | null
+          uploaded_by?: string | null
+          is_demo?: boolean
+          created_at?: string
+          updated_at?: string
+        }
         Relationships: []
       }
       attendance: {
