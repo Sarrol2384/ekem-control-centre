@@ -15,6 +15,10 @@ import { SummaryCard } from '../dashboard/components/SummaryCard'
 import { formatDashboardDate, formatLastUpdated, getGreeting } from '../dashboard/format'
 import { loadDashboardData } from '../dashboard/loadDashboardData'
 import type { AttentionItem, DashboardLoadResult, DashboardSectionKey } from '../dashboard/types'
+import {
+  PHARMACY_INTEGRATIONS,
+  PHARMACY_SOURCE_NOTE,
+} from '../pharmacy/integrationStatus'
 
 const QUICK_ACTIONS = [
   { label: 'Add Employee', href: '/staff/new' },
@@ -23,13 +27,6 @@ const QUICK_ACTIONS = [
   { label: 'Add Leave Request', href: '/leave' },
   { label: 'Add Training', href: '/training' },
   { label: 'Add Document', href: '/documents' },
-] as const
-
-const INTEGRATIONS = [
-  { name: 'POS', status: 'Not Connected' },
-  { name: 'Dispensing', status: 'Not Connected' },
-  { name: 'Inventory', status: 'Not Connected' },
-  { name: 'Accounting', status: 'Not Connected' },
 ] as const
 
 function sectionErrorMessage(
@@ -405,8 +402,9 @@ export function DashboardPage() {
 
         <div className="border border-[var(--color-warning-border)] bg-[var(--color-surface)] px-4 py-3">
           <h3 className="text-sm font-semibold text-[var(--color-text)]">Integration Status</h3>
+          <p className="mt-2 text-sm text-[var(--color-muted)]">{PHARMACY_SOURCE_NOTE}</p>
           <ul className="mt-3 grid gap-2 sm:grid-cols-2">
-            {INTEGRATIONS.map((integration) => (
+            {PHARMACY_INTEGRATIONS.map((integration) => (
               <li
                 key={integration.name}
                 className="flex items-center justify-between gap-3 border border-[var(--color-border)] px-3 py-2 text-sm"
