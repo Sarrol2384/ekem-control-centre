@@ -100,6 +100,7 @@ export async function listTasks(): Promise<TaskWithEmployee[]> {
   const { data, error } = await supabase
     .from('tasks')
     .select('*')
+    .eq('is_demo', false)
     .order('created_at', { ascending: false })
 
   if (error) throw new Error(error.message)
@@ -117,7 +118,12 @@ export async function getTask(id: string): Promise<TaskWithEmployee | null> {
     return { ...row, employee }
   }
 
-  const { data, error } = await supabase.from('tasks').select('*').eq('id', id).maybeSingle()
+  const { data, error } = await supabase
+    .from('tasks')
+    .select('*')
+    .eq('id', id)
+    .eq('is_demo', false)
+    .maybeSingle()
   if (error) throw new Error(error.message)
   if (!data) return null
   const employee = data.assigned_employee_id

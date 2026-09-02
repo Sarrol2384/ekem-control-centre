@@ -366,7 +366,9 @@ export function DocumentsPage() {
       {error && <p className="text-sm text-red-700">{error}</p>}
       {!loading && !error && filtered.length === 0 && (
         <p className="border border-[var(--color-border)] bg-[var(--color-surface)] p-6 text-sm text-[var(--color-muted)]">
-          No documents match your filters.
+          {rows.length === 0
+            ? 'No employee documents have been added.'
+            : 'No documents match your filters.'}
         </p>
       )}
 

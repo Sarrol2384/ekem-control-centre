@@ -1,5 +1,6 @@
+import { isLiveSupabaseData } from '../lib/liveData'
 import { getSupabaseClient } from '../lib/supabase'
-import type { PharmacyDemoMetrics } from './types'
+import type { PharmacyDashboardState, PharmacyDemoMetrics } from './types'
 
 const STATIC_DEMO: PharmacyDemoMetrics = {
   salesDisplay: 'R42,680',
@@ -17,8 +18,7 @@ function formatZar(amount: number): string {
   }).format(amount)
 }
 
-/** Fictional pharmacy metrics — never presented as live Ekem data. */
-export async function getPharmacyDemoMetrics(): Promise<PharmacyDemoMetrics> {
+async function loadLocalDemoPharmacyMetrics(): Promise<PharmacyDemoMetrics> {
   const supabase = getSupabaseClient()
   if (!supabase) {
     return STATIC_DEMO
@@ -82,4 +82,25 @@ export async function getPharmacyDemoMetrics(): Promise<PharmacyDemoMetrics> {
   } catch {
     return STATIC_DEMO
   }
+}
+
+/** Pharmacy section for the dashboard — live Ekem mode never shows fictional figures. */
+export async function getPharmacyDashboardState(): Promise<PharmacyDashboardState> {
+  if (isLiveSupabaseData()) {
+    return { mode: 'disconnected' }
+  }
+
+  return {
+    mode: 'demo',
+    metrics: await loadLocalDemoPharmacyMetrics(),
+  }
+}
+
+/** @deprecated Use getPharmacyDashboardState. Kept for local demo tooling only. */
+export async function getPharmacyDemoMetrics(): Promise<PharmacyDemoMetrics> {
+  const state = await getPharmacyDashboardState()
+  if (state.mode === 'disconnected') {
+    throw new Error('Pharmacy demo metrics are not available in live Ekem mode.')
+  }
+  return state.metrics
 }

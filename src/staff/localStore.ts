@@ -30,6 +30,7 @@ export function createSeedEmployees(): Employee[] {
       emergency_contact_relationship: 'Spouse',
       emergency_contact_number: '082 555 0102',
       notes: 'Demonstration employee record for Manager Control Centre demos.',
+      annual_leave_entitlement: 15,
       is_demo: true,
       created_at: createdAt,
       updated_at: createdAt,
@@ -51,6 +52,7 @@ export function createSeedEmployees(): Employee[] {
       emergency_contact_relationship: 'Sister',
       emergency_contact_number: '083 555 0203',
       notes: 'Demonstration employee — active, with approved sick leave demo covering today.',
+      annual_leave_entitlement: 15,
       is_demo: true,
       created_at: createdAt,
       updated_at: createdAt,
@@ -72,6 +74,7 @@ export function createSeedEmployees(): Employee[] {
       emergency_contact_relationship: 'Partner',
       emergency_contact_number: '084 555 0304',
       notes: 'Demonstration employee record for Manager Control Centre demos.',
+      annual_leave_entitlement: 15,
       is_demo: true,
       created_at: createdAt,
       updated_at: createdAt,
@@ -93,6 +96,7 @@ export function createSeedEmployees(): Employee[] {
       emergency_contact_relationship: 'Mother',
       emergency_contact_number: '081 555 0405',
       notes: 'Demonstration employee record for Manager Control Centre demos.',
+      annual_leave_entitlement: 15,
       is_demo: true,
       created_at: createdAt,
       updated_at: createdAt,
@@ -114,6 +118,7 @@ export function createSeedEmployees(): Employee[] {
       emergency_contact_relationship: 'Father',
       emergency_contact_number: '072 555 0506',
       notes: 'Demonstration employee record (inactive) for Manager Control Centre demos.',
+      annual_leave_entitlement: 15,
       is_demo: true,
       created_at: createdAt,
       updated_at: createdAt,
@@ -135,7 +140,10 @@ function readStore(): Employee[] {
     if (!Array.isArray(parsed)) {
       throw new Error('Invalid store')
     }
-    return parsed
+    return parsed.map((employee) => ({
+      ...employee,
+      annual_leave_entitlement: employee.annual_leave_entitlement ?? 15,
+    }))
   } catch {
     const seed = createSeedEmployees()
     localStorage.setItem(STORAGE_KEY, JSON.stringify(seed))

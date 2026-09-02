@@ -103,6 +103,7 @@ export async function listAttendanceForDate(date: string): Promise<AttendanceRec
     .from('attendance')
     .select('*')
     .eq('attendance_date', date)
+    .eq('is_demo', false)
 
   if (error) throw new Error(error.message)
   return data ?? []
@@ -131,6 +132,7 @@ export async function listAttendanceHistory(input: {
   let query = supabase
     .from('attendance')
     .select('*')
+    .eq('is_demo', false)
     .gte('attendance_date', input.start)
     .lte('attendance_date', input.end)
     .order('attendance_date', { ascending: false })

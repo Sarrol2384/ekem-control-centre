@@ -20,6 +20,7 @@ export type EmployeeFormValues = {
   emergency_contact_relationship: string
   emergency_contact_number: string
   notes: string
+  annual_leave_entitlement: string
 }
 
 export type EmployeeStatusFilter = 'all' | 'active' | 'inactive'
@@ -46,6 +47,7 @@ export const emptyEmployeeFormValues = (): EmployeeFormValues => ({
   emergency_contact_relationship: '',
   emergency_contact_number: '',
   notes: '',
+  annual_leave_entitlement: '',
 })
 
 export function employeeToFormValues(employee: Employee): EmployeeFormValues {
@@ -64,5 +66,9 @@ export function employeeToFormValues(employee: Employee): EmployeeFormValues {
     emergency_contact_relationship: employee.emergency_contact_relationship ?? '',
     emergency_contact_number: employee.emergency_contact_number ?? '',
     notes: employee.notes ?? '',
+    annual_leave_entitlement:
+      employee.annual_leave_entitlement != null
+        ? String(employee.annual_leave_entitlement)
+        : '',
   }
 }

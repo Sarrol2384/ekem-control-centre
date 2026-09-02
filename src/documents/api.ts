@@ -95,6 +95,7 @@ export async function listEmployeeDocuments(): Promise<EmployeeDocumentWithEmplo
   const { data, error } = await supabase
     .from('employee_documents')
     .select('*')
+    .eq('is_demo', false)
     .order('created_at', { ascending: false })
 
   if (error) throw new Error(error.message)
@@ -122,6 +123,7 @@ export async function getEmployeeDocument(
     .from('employee_documents')
     .select('*')
     .eq('id', id)
+    .eq('is_demo', false)
     .maybeSingle()
 
   if (error) throw new Error(error.message)

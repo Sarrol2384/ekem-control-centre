@@ -377,7 +377,7 @@ export function TasksPage() {
 
       {!loading && !error && filtered.length === 0 && (
         <div className="border border-dashed border-[var(--color-border)] bg-[var(--color-surface)] px-5 py-10 text-center text-sm text-[var(--color-muted)]">
-          No tasks match the current filters.
+          <p>{rows.length === 0 ? 'No tasks have been created.' : 'No tasks match the current filters.'}</p>
         </div>
       )}
 

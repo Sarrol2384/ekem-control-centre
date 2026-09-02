@@ -67,6 +67,10 @@ export type PharmacyDemoMetrics = {
   source: 'database' | 'static'
 }
 
+export type PharmacyDashboardState =
+  | { mode: 'disconnected' }
+  | { mode: 'demo'; metrics: PharmacyDemoMetrics }
+
 export type DashboardManagementData = {
   staff: StaffSummary
   attendance: DashboardAttendanceSummary
@@ -86,7 +90,7 @@ export type DashboardManagementData = {
 
 export type DashboardLoadResult = {
   management: Partial<DashboardManagementData>
-  pharmacy: PharmacyDemoMetrics
+  pharmacy: PharmacyDashboardState
   errors: DashboardSectionError[]
   loadedAt: Date
 }

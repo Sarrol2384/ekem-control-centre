@@ -306,7 +306,9 @@ export function TrainingPage() {
       {error && <p className="text-sm text-red-700">{error}</p>}
       {!loading && !error && filtered.length === 0 && (
         <p className="border border-[var(--color-border)] bg-[var(--color-surface)] p-6 text-sm text-[var(--color-muted)]">
-          No training records match your filters.
+          {rows.length === 0
+            ? 'No training records have been added.'
+            : 'No training records match your filters.'}
         </p>
       )}
 

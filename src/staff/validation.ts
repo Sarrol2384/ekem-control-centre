@@ -35,6 +35,15 @@ export function validateEmployeeForm(values: EmployeeFormValues): FieldErrors {
     errors.start_date = 'Enter a valid start date.'
   }
 
+  if (values.annual_leave_entitlement.trim()) {
+    const entitlement = Number.parseFloat(values.annual_leave_entitlement)
+    if (Number.isNaN(entitlement) || entitlement < 0) {
+      errors.annual_leave_entitlement = 'Enter a valid number of days (0 or more).'
+    } else if (entitlement > 365) {
+      errors.annual_leave_entitlement = 'Entitlement cannot exceed 365 days.'
+    }
+  }
+
   if (
     values.emergency_contact_name.trim() &&
     !values.emergency_contact_number.trim()

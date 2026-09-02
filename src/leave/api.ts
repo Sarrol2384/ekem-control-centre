@@ -2,6 +2,12 @@ import type { Json } from '../lib/database.types'
 import { getSupabaseClient, isSupabaseConfigured } from '../lib/supabase'
 import { getEmployee, listEmployees } from '../staff/api'
 import type { Employee } from '../staff/types'
+import {
+  computeEmployeeLeaveSummary,
+  currentLeaveYear,
+  listEmployeeLeaveHistory,
+  type EmployeeLeaveSummary,
+} from './balance'
 import { calculateLeaveDays, todayDateOnly } from './dateUtils'
 import { localLeaveStore } from './localStore'
 import type {
@@ -55,6 +61,7 @@ export async function listApprovedLeaveEmployeeIds(date: string): Promise<Set<st
     .from('leave_requests')
     .select('employee_id')
     .eq('status', 'approved')
+    .eq('is_demo', false)
     .lte('start_date', date)
     .gte('end_date', date)
 
@@ -78,6 +85,7 @@ export async function listLeaveRequests(): Promise<LeaveRequestWithEmployee[]> {
   const { data, error } = await supabase
     .from('leave_requests')
     .select('*')
+    .eq('is_demo', false)
     .order('created_at', { ascending: false })
 
   if (error) throw new Error(error.message)
@@ -97,6 +105,7 @@ export async function getLeaveRequest(id: string): Promise<LeaveRequestWithEmplo
     .from('leave_requests')
     .select('*')
     .eq('id', id)
+    .eq('is_demo', false)
     .maybeSingle()
 
   if (error) throw new Error(error.message)
@@ -298,4 +307,61 @@ export function summarizeLeave(rows: LeaveRequest[]) {
       .length,
     history: rows.filter((row) => isLeaveHistory(row, today)).length,
   }
+}
+
+export async function listLeaveByEmployee(
+  employeeId: string,
+): Promise<LeaveRequestWithEmployee[]> {
+  const rows = await listLeaveRequests()
+  return rows.filter((row) => row.employee_id === employeeId)
+}
+
+export async function getEmployeeLeaveSummary(
+  employeeId: string,
+  year: number = currentLeaveYear(),
+): Promise<EmployeeLeaveSummary | null> {
+  const employee = await getEmployee(employeeId)
+  if (!employee) return null
+
+  const supabase = getSupabaseClient()
+  let requests: LeaveRequest[]
+
+  if (!supabase) {
+    requests = localLeaveStore.list()
+  } else {
+    const { data, error } = await supabase
+      .from('leave_requests')
+      .select('*')
+      .eq('employee_id', employeeId)
+      .eq('is_demo', false)
+      .order('start_date', { ascending: false })
+
+    if (error) throw new Error(error.message)
+    requests = data ?? []
+  }
+
+  return computeEmployeeLeaveSummary(employee, requests, year)
+}
+
+export type EmployeeLeaveSummaryWithEmployee = EmployeeLeaveSummary & {
+  employee: Employee
+}
+
+export async function listAllLeaveSummaries(
+  year: number = currentLeaveYear(),
+): Promise<EmployeeLeaveSummaryWithEmployee[]> {
+  const [employees, allRequests] = await Promise.all([listEmployees(), listLeaveRequests()])
+  const requestRows = allRequests.map(({ employee: _employee, ...row }) => row)
+
+  return employees.map((employee) => ({
+    ...computeEmployeeLeaveSummary(employee, requestRows, year),
+    employee,
+  }))
+}
+
+export function getEmployeeLeaveHistoryFromRows(
+  employeeId: string,
+  rows: LeaveRequest[],
+): LeaveRequest[] {
+  return listEmployeeLeaveHistory(employeeId, rows)
 }

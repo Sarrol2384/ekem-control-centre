@@ -3,10 +3,22 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useAuth } from '../auth/useAuth'
 import { ConfirmDialog } from '../components/ConfirmDialog'
 import { DemoDataBadge } from '../components/DemoDataBadge'
+import {
+  getEmployeeLeaveHistoryFromRows,
+  getEmployeeLeaveSummary,
+  listLeaveRequests,
+} from '../leave/api'
+import { currentLeaveYear } from '../leave/balance'
+import {
+  LeaveHistoryTable,
+  LeaveSummaryCard,
+} from '../leave/components/LeaveSummarySection'
 import { getEmployee, setEmployeeActiveState } from './api'
 import { EmploymentStatusBadge } from './components/EmploymentStatusBadge'
 import { displayValue, formatDisplayDate } from './format'
 import type { Employee } from './types'
+import type { EmployeeLeaveSummary } from '../leave/balance'
+import type { LeaveRequest } from '../leave/types'
 
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (
@@ -29,6 +41,9 @@ export function EmployeeProfilePage() {
   const [actionError, setActionError] = useState<string | null>(null)
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [updatingStatus, setUpdatingStatus] = useState(false)
+  const [leaveSummary, setLeaveSummary] = useState<EmployeeLeaveSummary | null>(null)
+  const [leaveHistory, setLeaveHistory] = useState<LeaveRequest[]>([])
+  const leaveYear = currentLeaveYear()
 
   useEffect(() => {
     if (!employeeId) return
@@ -49,10 +64,21 @@ export function EmployeeProfilePage() {
         if (mounted) setLoading(false)
       })
 
+    void Promise.all([getEmployeeLeaveSummary(employeeId, leaveYear), listLeaveRequests()])
+      .then(([summary, allLeave]) => {
+        if (!mounted) return
+        setLeaveSummary(summary)
+        const requestRows = allLeave.map(({ employee: _employee, ...row }) => row)
+        setLeaveHistory(getEmployeeLeaveHistoryFromRows(employeeId, requestRows))
+      })
+      .catch(() => {
+        if (!mounted) return
+      })
+
     return () => {
       mounted = false
     }
-  }, [employeeId])
+  }, [employeeId, leaveYear])
 
   async function handleStatusChange() {
     if (!employee) return
@@ -162,6 +188,14 @@ export function EmployeeProfilePage() {
               label="Employment status"
               value={employee.employment_status === 'active' ? 'Active' : 'Inactive'}
             />
+            <InfoRow
+              label="Annual leave entitlement"
+              value={
+                employee.annual_leave_entitlement != null
+                  ? `${employee.annual_leave_entitlement} days / year`
+                  : 'Not configured'
+              }
+            />
           </dl>
         </section>
 
@@ -191,6 +225,25 @@ export function EmployeeProfilePage() {
       <section className="border border-[var(--color-border)] bg-[var(--color-surface)] p-5">
         <h2 className="text-base font-semibold">Notes</h2>
         <p className="mt-3 text-sm text-[var(--color-muted)]">{displayValue(employee.notes)}</p>
+      </section>
+
+      <section className="space-y-5 border border-[var(--color-border)] bg-[var(--color-surface)] p-5">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h2 className="text-base font-semibold">Leave</h2>
+          <Link to="/leave" className="text-sm text-[var(--color-primary)] underline">
+            Manage leave requests
+          </Link>
+        </div>
+        {leaveSummary ? (
+          <LeaveSummaryCard summary={leaveSummary} />
+        ) : (
+          <p className="text-sm text-[var(--color-muted)]">Unable to load leave balance.</p>
+        )}
+        <LeaveHistoryTable
+          rows={leaveHistory}
+          title="All leave taken"
+          emptyMessage="No leave has been recorded for this employee yet."
+        />
       </section>
 
       <ConfirmDialog

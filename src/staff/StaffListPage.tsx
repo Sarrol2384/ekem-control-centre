@@ -168,12 +168,18 @@ export function StaffListPage() {
         </p>
       )}
 
-      {!loading && !error && filtered.length === 0 && (
+      {!loading && !error && employees.length === 0 && (
         <div className="border border-dashed border-[var(--color-border)] bg-[var(--color-surface)] px-5 py-10 text-center text-sm text-[var(--color-muted)]">
-          <p>No employees match your current filters.</p>
+          <p>No employees have been added yet.</p>
           <Link to="/staff/new" className="mt-3 inline-block text-[var(--color-primary)] underline">
             Add the first employee
           </Link>
+        </div>
+      )}
+
+      {!loading && !error && employees.length > 0 && filtered.length === 0 && (
+        <div className="border border-dashed border-[var(--color-border)] bg-[var(--color-surface)] px-5 py-10 text-center text-sm text-[var(--color-muted)]">
+          <p>No employees match your current filters.</p>
         </div>
       )}
 

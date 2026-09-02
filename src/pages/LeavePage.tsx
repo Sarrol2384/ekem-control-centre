@@ -7,14 +7,21 @@ import { getStaffDataSource, listEmployees } from '../staff/api'
 import type { Employee } from '../staff/types'
 import {
   createLeaveRequest,
+  getEmployeeLeaveHistoryFromRows,
   isLeaveHistory,
   listLeaveRequests,
   setLeaveStatus,
   summarizeLeave,
   updatePendingLeaveRequest,
 } from '../leave/api'
+import { computeEmployeeLeaveSummary, currentLeaveYear } from '../leave/balance'
 import { LeaveFormDialog } from '../leave/components/LeaveFormDialog'
 import { LeaveStatusBadge } from '../leave/components/LeaveStatusBadge'
+import {
+  LeaveBalancesOverview,
+  LeaveHistoryTable,
+  LeaveSummaryCard,
+} from '../leave/components/LeaveSummarySection'
 import { todayDateOnly } from '../leave/dateUtils'
 import type {
   LeaveFormValues,
@@ -51,6 +58,7 @@ export function LeavePage() {
   } | null>(null)
   const [confirming, setConfirming] = useState(false)
   const [detail, setDetail] = useState<LeaveRequestWithEmployee | null>(null)
+  const [balanceYear, setBalanceYear] = useState(currentLeaveYear())
   const dataSource = getStaffDataSource()
   const today = todayDateOnly()
 
@@ -82,6 +90,31 @@ export function LeavePage() {
   }, [])
 
   const summary = useMemo(() => summarizeLeave(rows), [rows])
+
+  const balanceSummaries = useMemo(() => {
+    const requestRows = rows.map(({ employee: _employee, ...row }) => row)
+    const filteredEmployees =
+      employeeFilter === 'all'
+        ? employees
+        : employees.filter((employee) => employee.id === employeeFilter)
+
+    return filteredEmployees.map((employee) => ({
+      ...computeEmployeeLeaveSummary(employee, requestRows, balanceYear),
+      employeeName: employee.full_name,
+      employeeCode: employee.employee_code,
+    }))
+  }, [employees, rows, employeeFilter, balanceYear])
+
+  const selectedEmployeeSummary = useMemo(() => {
+    if (employeeFilter === 'all') return null
+    return balanceSummaries.find((row) => row.employeeId === employeeFilter) ?? null
+  }, [balanceSummaries, employeeFilter])
+
+  const selectedEmployeeHistory = useMemo(() => {
+    if (employeeFilter === 'all') return []
+    const requestRows = rows.map(({ employee: _employee, ...row }) => row)
+    return getEmployeeLeaveHistoryFromRows(employeeFilter, requestRows)
+  }, [rows, employeeFilter])
 
   const filtered = useMemo(() => {
     return rows.filter((row) => {
@@ -203,6 +236,52 @@ export function LeavePage() {
         ))}
       </div>
 
+      <section className="space-y-4 border border-[var(--color-border)] bg-[var(--color-surface)] p-5">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h2 className="text-lg font-semibold text-[var(--color-text)]">Leave balances</h2>
+            <p className="mt-1 text-sm text-[var(--color-muted)]">
+              Days taken and annual leave remaining for the selected year.
+            </p>
+          </div>
+          <label className="block text-sm">
+            <span className="mb-1 block font-medium">Year</span>
+            <select
+              value={balanceYear}
+              onChange={(e) => setBalanceYear(Number.parseInt(e.target.value, 10))}
+              className="border border-[var(--color-border)] px-3 py-2"
+            >
+              {[balanceYear - 1, balanceYear, balanceYear + 1].map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+
+        <LeaveBalancesOverview summaries={balanceSummaries} year={balanceYear} />
+
+        {selectedEmployeeSummary && (
+          <div className="border-t border-[var(--color-border)] pt-5">
+            <LeaveSummaryCard
+              summary={selectedEmployeeSummary}
+              employeeName={selectedEmployeeSummary.employeeName}
+            />
+          </div>
+        )}
+
+        {employeeFilter !== 'all' && (
+          <div className="border-t border-[var(--color-border)] pt-5">
+            <LeaveHistoryTable
+              rows={selectedEmployeeHistory}
+              title="All leave taken (all years)"
+              emptyMessage="This employee has no leave records yet."
+            />
+          </div>
+        )}
+      </section>
+
       <div className="grid gap-3 border border-[var(--color-border)] bg-[var(--color-surface)] p-4 sm:grid-cols-2">
         <label className="block text-sm">
           <span className="mb-1 block font-medium">Status</span>
@@ -249,7 +328,7 @@ export function LeavePage() {
 
       {!loading && !error && filtered.length === 0 && (
         <div className="border border-dashed border-[var(--color-border)] bg-[var(--color-surface)] px-5 py-10 text-center text-sm text-[var(--color-muted)]">
-          No leave requests match the current filters.
+          <p>{rows.length === 0 ? 'No leave requests found.' : 'No leave requests match the current filters.'}</p>
         </div>
       )}
 

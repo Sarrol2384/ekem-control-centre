@@ -55,6 +55,7 @@ export type Database = {
           emergency_contact_relationship: string | null
           emergency_contact_number: string | null
           notes: string | null
+          annual_leave_entitlement: number | null
           is_demo: boolean
           created_at: string
           updated_at: string
@@ -76,6 +77,7 @@ export type Database = {
           emergency_contact_relationship?: string | null
           emergency_contact_number?: string | null
           notes?: string | null
+          annual_leave_entitlement?: number | null
           is_demo?: boolean
           created_at?: string
           updated_at?: string
@@ -97,6 +99,7 @@ export type Database = {
           emergency_contact_relationship?: string | null
           emergency_contact_number?: string | null
           notes?: string | null
+          annual_leave_entitlement?: number | null
           is_demo?: boolean
           created_at?: string
           updated_at?: string

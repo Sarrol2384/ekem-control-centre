@@ -6,7 +6,7 @@ import { listEmployees } from '../staff/api'
 import { listTasks } from '../tasks/api'
 import { listTrainingRecords, summarizeTraining } from '../training/api'
 import { getAttentionItems } from './attention'
-import { getPharmacyDemoMetrics } from './pharmacyDemo'
+import { getPharmacyDashboardState } from './pharmacyDemo'
 import { getAttendanceSummary, getStaffSummary } from './summaries'
 import { getTaskSummary } from './taskSummary'
 import type {
@@ -101,7 +101,7 @@ export async function loadDashboardData(): Promise<DashboardLoadResult> {
     listTasks(),
     listTrainingRecords(),
     listEmployeeDocuments(),
-    getPharmacyDemoMetrics(),
+    getPharmacyDashboardState(),
   ])
 
   const sectionKeys: DashboardSectionKey[] = [
@@ -148,7 +148,7 @@ export async function loadDashboardData(): Promise<DashboardLoadResult> {
   const pharmacy =
     pharmacyResult.status === 'fulfilled'
       ? pharmacyResult.value
-      : await getPharmacyDemoMetrics()
+      : await getPharmacyDashboardState()
 
   return {
     management: buildManagementData(raw),

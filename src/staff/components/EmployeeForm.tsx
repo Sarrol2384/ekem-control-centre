@@ -111,6 +111,21 @@ export function EmployeeForm({
               onChange={(e) => update('start_date', e.target.value)}
             />
           </Field>
+          <Field
+            label="Annual leave entitlement (days/year, optional)"
+            error={errors.annual_leave_entitlement}
+          >
+            <input
+              type="number"
+              min={0}
+              max={365}
+              step={0.5}
+              className={inputClassName}
+              value={values.annual_leave_entitlement}
+              disabled={submitting}
+              onChange={(e) => update('annual_leave_entitlement', e.target.value)}
+            />
+          </Field>
         </div>
       </section>
 

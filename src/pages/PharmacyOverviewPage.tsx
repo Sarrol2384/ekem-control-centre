@@ -1,3 +1,4 @@
+import { getStaffDataSource } from '../staff/api'
 import { DemoDataBadge } from '../components/DemoDataBadge'
 import {
   PHARMACY_INTEGRATIONS,
@@ -6,16 +7,22 @@ import {
 } from '../pharmacy/integrationStatus'
 
 export function PharmacyOverviewPage() {
+  const dataSource = getStaffDataSource()
+  const isLocalDemo = dataSource === 'local_demo'
+
   return (
     <section className="space-y-6">
       <div>
         <div className="flex flex-wrap items-center gap-3">
           <h1 className="text-2xl font-semibold text-[var(--color-text)]">Pharmacy Overview</h1>
-          <DemoDataBadge label="Demonstration data — not connected to live Ekem systems" />
+          {isLocalDemo ? (
+            <DemoDataBadge label="Demonstration data — not connected to live Ekem systems" />
+          ) : null}
         </div>
         <p className="mt-2 max-w-3xl text-sm text-[var(--color-muted)]">
-          Live pharmacy metrics are not available in this application yet. Figures shown elsewhere
-          on the dashboard are fictional placeholders until a secure integration is in place.
+          {isLocalDemo
+            ? 'Live pharmacy metrics are not available in this application yet. Figures shown on the dashboard in local demo mode are fictional placeholders until a secure integration is in place.'
+            : 'Live pharmacy data not connected. Pharmacy operational data unavailable — UNISOLV not connected. The Control Centre is currently managing people, attendance, leave, tasks, training and documents.'}
         </p>
       </div>
 

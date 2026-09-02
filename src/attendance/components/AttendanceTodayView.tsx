@@ -183,8 +183,8 @@ export function AttendanceTodayView() {
 
       {!loading && !error && rows.length === 0 && (
         <div className="border border-dashed border-[var(--color-border)] bg-[var(--color-surface)] px-5 py-10 text-center text-sm text-[var(--color-muted)]">
-          No active employees are scheduled today. Inactive employees are excluded from the daily
-          roster.
+          No active employees are available for attendance today. Add employees or reactivate
+          inactive staff to begin recording attendance.
         </div>
       )}
 

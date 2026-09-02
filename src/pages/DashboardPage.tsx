@@ -380,24 +380,50 @@ export function DashboardPage() {
       <section className="space-y-4 border-2 border-dashed border-[var(--color-warning-border)] bg-[var(--color-warning-bg)] p-4 sm:p-5">
         <div className="flex flex-wrap items-center gap-3">
           <h2 className="text-lg font-semibold text-[var(--color-text)]">Pharmacy Operations</h2>
-          <DemoDataBadge label="DEMONSTRATION DATA — NOT CONNECTED TO EKEM'S LIVE SYSTEMS" />
+          {pharmacy?.mode === 'demo' ? (
+            <DemoDataBadge label="DEMONSTRATION DATA — NOT CONNECTED TO EKEM'S LIVE SYSTEMS" />
+          ) : null}
         </div>
-        <p className="text-sm text-[var(--color-warning-text)]">
-          This section is for demonstration purposes only. Figures are fictional and are not live
-          Ekem pharmacy performance data.
-        </p>
 
-        {pharmacy ? (
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <SummaryCard label="Sales" value={pharmacy.salesDisplay} hint="Demonstration only" />
-            <SummaryCard label="Prescriptions" value={pharmacy.prescriptions} hint="Demonstration only" />
-            <SummaryCard label="Low Stock" value={pharmacy.lowStock} hint="Demonstration only" />
-            <SummaryCard
-              label="Suppliers Requiring Attention"
-              value={pharmacy.suppliersRequiringAttention}
-              hint="Demonstration only"
-            />
+        {pharmacy?.mode === 'disconnected' ? (
+          <div className="border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-6 text-center">
+            <p className="text-base font-medium text-[var(--color-text)]">
+              Live pharmacy data not connected
+            </p>
+            <p className="mt-2 text-sm text-[var(--color-muted)]">
+              Pharmacy operational data unavailable — UNISOLV not connected. The Control Centre is
+              currently managing people, attendance, leave, tasks, training and documents.
+            </p>
           </div>
+        ) : pharmacy?.mode === 'demo' ? (
+          <>
+            <p className="text-sm text-[var(--color-warning-text)]">
+              This section is for demonstration purposes only. Figures are fictional and are not live
+              Ekem pharmacy performance data.
+            </p>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <SummaryCard
+                label="Sales"
+                value={pharmacy.metrics.salesDisplay}
+                hint="Demonstration only"
+              />
+              <SummaryCard
+                label="Prescriptions"
+                value={pharmacy.metrics.prescriptions}
+                hint="Demonstration only"
+              />
+              <SummaryCard
+                label="Low Stock"
+                value={pharmacy.metrics.lowStock}
+                hint="Demonstration only"
+              />
+              <SummaryCard
+                label="Suppliers Requiring Attention"
+                value={pharmacy.metrics.suppliersRequiringAttention}
+                hint="Demonstration only"
+              />
+            </div>
+          </>
         ) : null}
 
         <div className="border border-[var(--color-warning-border)] bg-[var(--color-surface)] px-4 py-3">

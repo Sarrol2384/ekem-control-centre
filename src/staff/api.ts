@@ -25,6 +25,9 @@ function formToPayload(values: EmployeeFormValues, isDemoDefault: boolean) {
     emergency_contact_relationship: emptyToNull(values.emergency_contact_relationship),
     emergency_contact_number: emptyToNull(values.emergency_contact_number),
     notes: emptyToNull(values.notes),
+    annual_leave_entitlement: values.annual_leave_entitlement.trim()
+      ? Number.parseFloat(values.annual_leave_entitlement)
+      : null,
     is_demo: isDemoDefault,
   }
 }
@@ -64,6 +67,7 @@ export async function listEmployees(): Promise<Employee[]> {
   const { data, error } = await supabase
     .from('employees')
     .select('*')
+    .eq('is_demo', false)
     .order('full_name', { ascending: true })
 
   if (error) {
@@ -83,6 +87,10 @@ export async function getEmployee(id: string): Promise<Employee | null> {
 
   if (error) {
     throw new Error(error.message)
+  }
+
+  if (data?.is_demo) {
+    return null
   }
 
   return data

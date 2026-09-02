@@ -92,6 +92,7 @@ export async function listTrainingRecords(): Promise<TrainingRecordWithEmployee[
   const { data, error } = await supabase
     .from('training_records')
     .select('*')
+    .eq('is_demo', false)
     .order('created_at', { ascending: false })
 
   if (error) throw new Error(error.message)
@@ -117,6 +118,7 @@ export async function getTrainingRecord(id: string): Promise<TrainingRecordWithE
     .from('training_records')
     .select('*')
     .eq('id', id)
+    .eq('is_demo', false)
     .maybeSingle()
 
   if (error) throw new Error(error.message)
