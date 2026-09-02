@@ -90,10 +90,7 @@ export function StaffListPage() {
             employees.
           </p>
         </div>
-        <Link
-          to="/staff/new"
-          className="bg-[var(--color-primary)] px-4 py-2.5 text-sm font-medium text-white hover:bg-[var(--color-primary-hover)]"
-        >
+        <Link to="/staff/new" className="btn-primary">
           Add employee
         </Link>
       </div>
@@ -102,22 +99,22 @@ export function StaffListPage() {
         <DemoDataBadge label="Local demonstration mode — records are stored in this browser only" />
       )}
 
-      <div className="grid gap-3 border border-[var(--color-border)] bg-[var(--color-surface)] p-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="filter-panel grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <label className="block text-sm sm:col-span-2">
-          <span className="mb-1 block font-medium">Search</span>
+          <span className="mb-1 block font-medium text-[var(--color-text)]">Search</span>
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Name, ID, position, email…"
-            className="w-full border border-[var(--color-border)] px-3 py-2 outline-none focus:border-[var(--color-primary)]"
+            className="w-full px-3 py-2.5"
           />
         </label>
         <label className="block text-sm">
-          <span className="mb-1 block font-medium">Status</span>
+          <span className="mb-1 block font-medium text-[var(--color-text)]">Status</span>
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value as EmployeeStatusFilter)}
-            className="w-full border border-[var(--color-border)] px-3 py-2"
+            className="w-full px-3 py-2.5"
           >
             <option value="all">All</option>
             <option value="active">Active</option>
@@ -125,11 +122,11 @@ export function StaffListPage() {
           </select>
         </label>
         <label className="block text-sm">
-          <span className="mb-1 block font-medium">Department</span>
+          <span className="mb-1 block font-medium text-[var(--color-text)]">Department</span>
           <select
             value={departmentFilter}
             onChange={(e) => setDepartmentFilter(e.target.value)}
-            className="w-full border border-[var(--color-border)] px-3 py-2"
+            className="w-full px-3 py-2.5"
           >
             <option value="all">All</option>
             {departments.map((department) => (
@@ -140,11 +137,11 @@ export function StaffListPage() {
           </select>
         </label>
         <label className="block text-sm sm:col-span-2 lg:col-span-4">
-          <span className="mb-1 block font-medium">Sort by</span>
+          <span className="mb-1 block font-medium text-[var(--color-text)]">Sort by</span>
           <select
             value={sortKey}
             onChange={(e) => setSortKey(e.target.value as EmployeeSortKey)}
-            className="w-full max-w-xs border border-[var(--color-border)] px-3 py-2"
+            className="w-full max-w-xs px-3 py-2.5"
           >
             <option value="full_name">Full name</option>
             <option value="employee_code">Employee ID</option>
@@ -169,24 +166,24 @@ export function StaffListPage() {
       )}
 
       {!loading && !error && employees.length === 0 && (
-        <div className="border border-dashed border-[var(--color-border)] bg-[var(--color-surface)] px-5 py-10 text-center text-sm text-[var(--color-muted)]">
+        <div className="empty-state text-sm">
           <p>No employees have been added yet.</p>
-          <Link to="/staff/new" className="mt-3 inline-block text-[var(--color-primary)] underline">
+          <Link to="/staff/new" className="btn-primary mt-4 inline-flex">
             Add the first employee
           </Link>
         </div>
       )}
 
       {!loading && !error && employees.length > 0 && filtered.length === 0 && (
-        <div className="border border-dashed border-[var(--color-border)] bg-[var(--color-surface)] px-5 py-10 text-center text-sm text-[var(--color-muted)]">
+        <div className="empty-state text-sm">
           <p>No employees match your current filters.</p>
         </div>
       )}
 
       {!loading && !error && filtered.length > 0 && (
-        <div className="overflow-x-auto border border-[var(--color-border)] bg-[var(--color-surface)]">
+        <div className="table-shell">
           <table className="min-w-full text-left text-sm">
-            <thead className="border-b border-[var(--color-border)] bg-[var(--color-bg)] text-[var(--color-muted)]">
+            <thead className="border-b border-[var(--color-border)] text-[var(--color-muted)]">
               <tr>
                 <th className="px-3 py-3 font-medium">Employee ID</th>
                 <th className="px-3 py-3 font-medium">Full name</th>

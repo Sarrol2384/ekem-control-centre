@@ -255,7 +255,7 @@ export function TasksPage() {
         <button
           type="button"
           onClick={openCreate}
-          className="bg-[var(--color-primary)] px-4 py-2.5 text-sm font-medium text-white hover:bg-[var(--color-primary-hover)]"
+          className="btn-primary"
         >
           Create task
         </button>

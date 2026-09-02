@@ -153,7 +153,7 @@ export function EmployeeProfilePage() {
           <button
             type="button"
             onClick={() => setConfirmOpen(true)}
-            className="bg-[var(--color-primary)] px-3 py-2 text-sm font-medium text-white hover:bg-[var(--color-primary-hover)]"
+            className="btn-primary px-3 py-2 text-sm"
           >
             {isActive ? 'Deactivate' : 'Reactivate'}
           </button>

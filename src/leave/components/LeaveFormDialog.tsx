@@ -174,7 +174,7 @@ export function LeaveFormDialog({
             <button
               type="submit"
               disabled={submitting}
-              className="bg-[var(--color-primary)] px-3 py-2 text-sm font-medium text-white hover:bg-[var(--color-primary-hover)] disabled:opacity-60"
+              className="btn-primary px-3 py-2 text-sm disabled:opacity-60"
             >
               {submitting ? 'Saving…' : 'Save leave request'}
             </button>

@@ -42,7 +42,7 @@ export function EkemBrand({
           Ekem Pharmacy
         </p>
         {showTagline ? (
-          <p className="text-xs font-medium text-[var(--color-accent)]">We&apos;re Here For You!</p>
+          <p className="text-xs font-semibold text-[var(--color-accent)]">We&apos;re Here For You!</p>
         ) : null}
         {showSubtitle ? (
           <p className="text-xs text-[var(--color-muted)]">Manager Control Centre</p>

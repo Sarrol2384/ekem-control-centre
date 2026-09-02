@@ -41,8 +41,10 @@ export function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[var(--color-bg)] px-4">
-      <div className="w-full max-w-md border border-[var(--color-border)] bg-[var(--color-surface)] p-8 shadow-sm">
+    <div className="flex min-h-screen items-center justify-center px-4 py-8">
+      <div className="page-content w-full max-w-md overflow-hidden card">
+        <div className="brand-accent-bar" />
+        <div className="p-8">
         <EkemBrand layout="stacked" size="lg" showTagline showSubtitle />
         <p className="mt-4 text-sm text-[var(--color-muted)]">
           Sign in with your manager account to continue.
@@ -69,7 +71,7 @@ export function LoginPage() {
               disabled={!isConfigured || submitting}
               value={email}
               onChange={(event) => setEmail(event.target.value)}
-              className="w-full border border-[var(--color-border)] bg-white px-3 py-2 outline-none focus:border-[var(--color-primary)] disabled:opacity-60"
+              className="w-full px-3 py-2.5 disabled:opacity-60"
             />
           </label>
 
@@ -82,7 +84,7 @@ export function LoginPage() {
               disabled={!isConfigured || submitting}
               value={password}
               onChange={(event) => setPassword(event.target.value)}
-              className="w-full border border-[var(--color-border)] bg-white px-3 py-2 outline-none focus:border-[var(--color-primary)] disabled:opacity-60"
+              className="w-full px-3 py-2.5 disabled:opacity-60"
             />
           </label>
 
@@ -95,7 +97,7 @@ export function LoginPage() {
           <button
             type="submit"
             disabled={!isConfigured || submitting}
-            className="w-full bg-[var(--color-primary)] px-4 py-2.5 font-medium text-white hover:bg-[var(--color-primary-hover)] disabled:cursor-not-allowed disabled:opacity-60"
+            className="btn-primary w-full py-2.5 disabled:cursor-not-allowed"
           >
             {submitting ? 'Signing in…' : 'Sign in'}
           </button>
@@ -105,11 +107,12 @@ export function LoginPage() {
           <button
             type="button"
             onClick={handleLocalDemo}
-            className="mt-4 w-full border border-[var(--color-border)] px-4 py-2.5 text-sm font-medium text-[var(--color-text)] hover:bg-[var(--color-bg)]"
+            className="btn-secondary mt-4 w-full py-2.5"
           >
             Continue in local demonstration mode
           </button>
         )}
+        </div>
       </div>
     </div>
   )

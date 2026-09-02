@@ -6,7 +6,7 @@ type SummaryCardProps = {
 
 export function SummaryCard({ label, value, hint }: SummaryCardProps) {
   return (
-    <div className="border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3">
+    <div className="card px-4 py-3">
       <p className="text-xs font-medium uppercase tracking-wide text-[var(--color-muted)]">
         {label}
       </p>

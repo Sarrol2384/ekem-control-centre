@@ -224,7 +224,7 @@ export function DocumentFormDialog({
             <button
               type="submit"
               disabled={submitting}
-              className="bg-[var(--color-primary)] px-3 py-2 text-sm text-white hover:opacity-90 disabled:opacity-60"
+              className="btn-primary px-3 py-2 text-sm disabled:opacity-60"
             >
               {submitting ? 'Saving…' : 'Save document'}
             </button>

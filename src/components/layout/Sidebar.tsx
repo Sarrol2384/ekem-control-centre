@@ -10,16 +10,17 @@ type SidebarProps = {
 export function Sidebar({ open, onNavigate }: SidebarProps) {
   return (
     <aside
-      className={`fixed inset-y-0 left-0 z-30 w-[var(--sidebar-width)] border-r border-[var(--color-border)] bg-[var(--color-surface)] transition-transform duration-200 lg:static lg:translate-x-0 ${
+      className={`fixed inset-y-0 left-0 z-30 flex w-[var(--sidebar-width)] flex-col border-r border-[var(--color-border)] bg-[var(--color-surface)] shadow-[var(--shadow-md)] transition-transform duration-300 ease-out lg:static lg:translate-x-0 ${
         open ? 'translate-x-0' : '-translate-x-full'
       }`}
       aria-label="Main navigation"
     >
-      <div className="border-b border-[var(--color-border)] px-4 py-3">
+      <div className="brand-accent-bar" />
+      <div className="border-b border-[var(--color-border)] bg-gradient-to-b from-white to-[var(--color-brand-teal-light)] px-4 py-4">
         <EkemBrand size="sm" showTagline showSubtitle />
       </div>
 
-      <nav className="flex flex-col gap-0.5 p-3">
+      <nav className="flex flex-1 flex-col gap-1 p-3">
         {NAV_ITEMS.map((item) => (
           <NavLink
             key={item.to}
@@ -27,17 +28,19 @@ export function Sidebar({ open, onNavigate }: SidebarProps) {
             end={'end' in item ? item.end : false}
             onClick={onNavigate}
             className={({ isActive }) =>
-              `px-3 py-2 text-sm transition-colors ${
-                isActive
-                  ? 'bg-[var(--color-primary)] font-medium text-white'
-                  : 'text-[var(--color-text)] hover:bg-[var(--color-bg)]'
-              }`
+              `px-3 py-2.5 text-sm ${isActive ? 'nav-link-active font-semibold' : 'nav-link-idle'}`
             }
           >
             {item.label}
           </NavLink>
         ))}
       </nav>
+
+      <div className="border-t border-[var(--color-border)] px-4 py-3 text-xs text-[var(--color-muted)]">
+        <span className="inline-block h-2 w-2 rounded-full bg-[var(--color-brand-teal)]" aria-hidden />
+        {' '}
+        Ekem Pharmacy Control Centre
+      </div>
     </aside>
   )
 }
