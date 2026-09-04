@@ -11,7 +11,7 @@ export function AppShell() {
       {mobileNavOpen && (
         <button
           type="button"
-          className="fixed inset-0 z-20 bg-black/30 lg:hidden"
+          className="no-print fixed inset-0 z-20 bg-black/30 lg:hidden"
           aria-label="Close navigation menu"
           onClick={() => setMobileNavOpen(false)}
         />

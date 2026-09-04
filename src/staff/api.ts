@@ -1,6 +1,7 @@
 import type { Json } from '../lib/database.types'
 import { getSupabaseClient, isSupabaseConfigured } from '../lib/supabase'
 import { localEmployeeStore } from './localStore'
+import { joinFullName } from './name'
 import type { Employee, EmployeeFormValues } from './types'
 
 export type StaffDataSource = 'supabase' | 'local_demo'
@@ -13,7 +14,7 @@ function emptyToNull(value: string): string | null {
 function formToPayload(values: EmployeeFormValues, isDemoDefault: boolean) {
   return {
     employee_code: values.employee_code.trim(),
-    full_name: values.full_name.trim(),
+    full_name: joinFullName(values.first_name, values.surname),
     position: emptyToNull(values.position),
     department: emptyToNull(values.department),
     employment_status: values.employment_status,

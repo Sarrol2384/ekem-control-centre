@@ -132,12 +132,22 @@ export function EmployeeForm({
       <section className="space-y-4 border border-[var(--color-border)] bg-[var(--color-surface)] p-5">
         <h2 className="text-base font-semibold">Personal information</h2>
         <div className="grid gap-4 sm:grid-cols-2">
-          <Field label="Full name" required error={errors.full_name}>
+          <Field label="Name" required error={errors.first_name}>
             <input
               className={inputClassName}
-              value={values.full_name}
+              autoComplete="given-name"
+              value={values.first_name}
               disabled={submitting}
-              onChange={(e) => update('full_name', e.target.value)}
+              onChange={(e) => update('first_name', e.target.value)}
+            />
+          </Field>
+          <Field label="Surname" required error={errors.surname}>
+            <input
+              className={inputClassName}
+              autoComplete="family-name"
+              value={values.surname}
+              disabled={submitting}
+              onChange={(e) => update('surname', e.target.value)}
             />
           </Field>
           <Field label="Contact number" error={errors.contact_number}>

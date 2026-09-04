@@ -10,6 +10,7 @@ import {
   todayDateOnly,
   type DateRange,
 } from '../dateUtils'
+import { calculateCreditedHours, formatHoursDisplay } from '../hours'
 import type { AttendanceRecord, HistoryRangePreset } from '../types'
 import { AttendanceStatusBadge } from './AttendanceStatusBadge'
 
@@ -193,6 +194,7 @@ export function AttendanceHistoryView() {
                 <th className="px-3 py-3 font-medium">Status</th>
                 <th className="px-3 py-3 font-medium">Arrival</th>
                 <th className="px-3 py-3 font-medium">Departure</th>
+                <th className="px-3 py-3 font-medium">Hours</th>
                 <th className="px-3 py-3 font-medium">Notes</th>
               </tr>
             </thead>
@@ -219,6 +221,9 @@ export function AttendanceHistoryView() {
                   </td>
                   <td className="px-3 py-3 whitespace-nowrap">
                     {formatTimeDisplay(row.departure_time)}
+                  </td>
+                  <td className="px-3 py-3 whitespace-nowrap">
+                    {formatHoursDisplay(calculateCreditedHours(row))}
                   </td>
                   <td className="px-3 py-3 max-w-[16rem] text-[var(--color-muted)]">
                     {row.notes?.trim() ? row.notes : '—'}

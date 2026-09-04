@@ -18,8 +18,11 @@ export function validateEmployeeForm(values: EmployeeFormValues): FieldErrors {
     errors.employee_code = 'Employee ID must be at least 3 characters.'
   }
 
-  const nameError = required(values.full_name, 'Full name')
-  if (nameError) errors.full_name = nameError
+  const firstNameError = required(values.first_name, 'Name')
+  if (firstNameError) errors.first_name = firstNameError
+
+  const surnameError = required(values.surname, 'Surname')
+  if (surnameError) errors.surname = surnameError
 
   const positionError = required(values.position, 'Position')
   if (positionError) errors.position = positionError

@@ -9,6 +9,7 @@ import {
   summarizeAttendance,
 } from '../api'
 import { formatDateLabel, formatTimeDisplay, todayDateOnly } from '../dateUtils'
+import { calculateCreditedHours, formatHoursDisplay } from '../hours'
 import type {
   AttendanceFormValues,
   AttendanceStatus,
@@ -199,6 +200,7 @@ export function AttendanceTodayView() {
                 <th className="px-3 py-3 font-medium">Status</th>
                 <th className="px-3 py-3 font-medium">Arrival</th>
                 <th className="px-3 py-3 font-medium">Departure</th>
+                <th className="px-3 py-3 font-medium">Hours</th>
                 <th className="px-3 py-3 font-medium">Notes</th>
                 <th className="px-3 py-3 font-medium">Actions</th>
               </tr>
@@ -241,6 +243,15 @@ export function AttendanceTodayView() {
                     </td>
                     <td className="px-3 py-3 whitespace-nowrap">
                       {onApprovedLeave ? '—' : formatTimeDisplay(row.record?.departure_time)}
+                    </td>
+                    <td className="px-3 py-3 whitespace-nowrap">
+                      {onApprovedLeave
+                        ? '—'
+                        : formatHoursDisplay(
+                            row.record
+                              ? calculateCreditedHours(row.record)
+                              : null,
+                          )}
                     </td>
                     <td className="px-3 py-3 max-w-[14rem]">
                       <span className="line-clamp-2 text-[var(--color-muted)]">

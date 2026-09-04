@@ -1,4 +1,5 @@
 import type { Database } from '../lib/database.types'
+import { splitFullName } from './name'
 
 export type EmploymentStatus = 'active' | 'inactive' | 'archived'
 
@@ -8,7 +9,8 @@ export type EmployeeUpdate = Database['public']['Tables']['employees']['Update']
 
 export type EmployeeFormValues = {
   employee_code: string
-  full_name: string
+  first_name: string
+  surname: string
   position: string
   department: string
   employment_status: EmploymentStatus
@@ -35,7 +37,8 @@ export type EmployeeSortKey =
 
 export const emptyEmployeeFormValues = (): EmployeeFormValues => ({
   employee_code: '',
-  full_name: '',
+  first_name: '',
+  surname: '',
   position: '',
   department: '',
   employment_status: 'active',
@@ -51,9 +54,11 @@ export const emptyEmployeeFormValues = (): EmployeeFormValues => ({
 })
 
 export function employeeToFormValues(employee: Employee): EmployeeFormValues {
+  const { first_name, surname } = splitFullName(employee.full_name)
   return {
     employee_code: employee.employee_code,
-    full_name: employee.full_name,
+    first_name,
+    surname,
     position: employee.position ?? '',
     department: employee.department ?? '',
     employment_status:

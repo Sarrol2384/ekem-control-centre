@@ -34,6 +34,36 @@ export function startOfMonth(dateOnly: string): string {
   return toDateOnly(date)
 }
 
+export function endOfMonth(dateOnly: string): string {
+  const date = parseDateOnly(dateOnly)
+  date.setMonth(date.getMonth() + 1, 0)
+  return toDateOnly(date)
+}
+
+/** `YYYY-MM` for month pickers. */
+export function toMonthValue(dateOnly: string = todayDateOnly()): string {
+  return dateOnly.slice(0, 7)
+}
+
+export function rangeForMonthValue(monthValue: string): DateRange {
+  const start = `${monthValue}-01`
+  return { start, end: endOfMonth(start) }
+}
+
+export function formatMonthLabel(monthValue: string): string {
+  const start = `${monthValue}-01`
+  return new Intl.DateTimeFormat(undefined, {
+    year: 'numeric',
+    month: 'long',
+  }).format(parseDateOnly(start))
+}
+
+export function daysInMonth(monthValue: string): number {
+  const start = `${monthValue}-01`
+  const end = endOfMonth(start)
+  return Number.parseInt(end.slice(8, 10), 10)
+}
+
 export function formatDateLabel(dateOnly: string): string {
   return new Intl.DateTimeFormat(undefined, {
     weekday: 'short',

@@ -16,6 +16,7 @@ import {
 import { getEmployee, setEmployeeActiveState } from './api'
 import { EmploymentStatusBadge } from './components/EmploymentStatusBadge'
 import { displayValue, formatDisplayDate } from './format'
+import { splitFullName } from './name'
 import type { Employee } from './types'
 import type { EmployeeLeaveSummary } from '../leave/balance'
 import type { LeaveRequest } from '../leave/types'
@@ -118,6 +119,7 @@ export function EmployeeProfilePage() {
   }
 
   const isActive = employee.employment_status === 'active'
+  const { first_name, surname } = splitFullName(employee.full_name)
 
   return (
     <section className="space-y-4">
@@ -170,7 +172,8 @@ export function EmployeeProfilePage() {
         <section className="border border-[var(--color-border)] bg-[var(--color-surface)] p-5 lg:col-span-1">
           <h2 className="text-base font-semibold">Personal information</h2>
           <dl className="mt-4 space-y-4">
-            <InfoRow label="Full name" value={displayValue(employee.full_name)} />
+            <InfoRow label="Name" value={displayValue(first_name)} />
+            <InfoRow label="Surname" value={displayValue(surname)} />
             <InfoRow label="Contact number" value={displayValue(employee.contact_number)} />
             <InfoRow label="Email" value={displayValue(employee.email)} />
             <InfoRow label="Address" value={displayValue(employee.address)} />

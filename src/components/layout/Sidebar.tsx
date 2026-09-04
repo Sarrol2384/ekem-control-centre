@@ -10,7 +10,7 @@ type SidebarProps = {
 export function Sidebar({ open, onNavigate }: SidebarProps) {
   return (
     <aside
-      className={`fixed inset-y-0 left-0 z-30 flex w-[var(--sidebar-width)] flex-col border-r border-[var(--color-border)] bg-[var(--color-surface)] shadow-[var(--shadow-md)] transition-transform duration-300 ease-out lg:static lg:translate-x-0 ${
+      className={`no-print fixed inset-y-0 left-0 z-30 flex w-[var(--sidebar-width)] flex-col border-r border-[var(--color-border)] bg-[var(--color-surface)] shadow-[var(--shadow-md)] transition-transform duration-300 ease-out lg:static lg:translate-x-0 ${
         open ? 'translate-x-0' : '-translate-x-full'
       }`}
       aria-label="Main navigation"

@@ -143,7 +143,7 @@ export function StaffListPage() {
             onChange={(e) => setSortKey(e.target.value as EmployeeSortKey)}
             className="w-full max-w-xs px-3 py-2.5"
           >
-            <option value="full_name">Full name</option>
+            <option value="full_name">Name</option>
             <option value="employee_code">Employee ID</option>
             <option value="position">Position</option>
             <option value="department">Department</option>
@@ -186,7 +186,7 @@ export function StaffListPage() {
             <thead className="border-b border-[var(--color-border)] text-[var(--color-muted)]">
               <tr>
                 <th className="px-3 py-3 font-medium">Employee ID</th>
-                <th className="px-3 py-3 font-medium">Full name</th>
+                <th className="px-3 py-3 font-medium">Name</th>
                 <th className="px-3 py-3 font-medium">Position</th>
                 <th className="px-3 py-3 font-medium">Department</th>
                 <th className="px-3 py-3 font-medium">Status</th>
